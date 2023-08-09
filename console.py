@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """contains the entry point of the command interpreter"""
 import cmd
+from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
@@ -19,6 +20,10 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """pass an emptyline"""
         pass
+
+    def do_create(self, line):
+        """Creates a new instance of BaseModel"""
+        print(line)
 
 
 if __name__ == '__main__':
