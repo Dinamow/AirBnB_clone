@@ -2,6 +2,7 @@
 # serializes instances to a JSON file and deserializes JSON file to instances
 import json
 import os.path
+from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -11,43 +12,28 @@ class FileStorage:
 
     def all(self):
         """returns the dictionary"""
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """sets in __objects the obj"""
-        className = self.__class__.__name__ + "." + obj["id"]
-        self.__objects[className] = obj
+        className = obj.__class__.__name__ + "." + obj.id
+        FileStorage.__objects[className] = obj
 
     def save(self):
         """serializes __objects to the JSON file"""
-        with open(self.__file_path, "w+", encoding='utf-8') as f:
-            if os.path.getsize(self.__file_path) > 0:
-                readed_file = f.read()
-                new_obj = json.loads(readed_file)
-                new_obj = self.__objects | new_obj
-                f.write(new_obj)
-            else:
-                data = json.dumps(self.__objects)
-                f.write(data)
+        all_objects = FileStorage.__objects
+        objdict = {}
+        for ob in all_objects.keys():
+            objdict[ob] = all_objects[ob].to_dict()
+        with open(FileStorage.__file_path, "w") as f:
+            json.dump(objdict, f)
 
     def reload(self):
         """deserializes the JSON file to __objects"""
-        check_file = os.path.isfile(self.__file_path)
-        if check_file:
-            with open(self.__file_path, "r", encoding='utf-8') as f:
-                new_obj = json.loads(f.read())
-                self.__objects = new_obj
-
-
-test = FileStorage()
-test.new({"id": "hello", "name": "hello"})
-test.save()
-test.new({"id": "negga", "name": "hello"})
-test.save()
-test.reload()
-test.new({"id": "nigga", "name": "hello"})
-test.save()
-print(test.all())
-print("fuck u")
-test.reload()
-print(test.all())
+        check_file = os.path.isfile(FileStorage.__file_path)
+        if (check_file):
+            with open(FileStorage.__file_path, 'r', encoding="utf-8") as f:
+                data_json = json.load(f)
+                for key, value in data_json.items():
+                    FileStorage.__objects[key] = eval(
+                        value['__class__'])(**value)
