@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# serializes instances to a JSON file and deserializes JSON file to instances
+""" serializes instances to a JSON file and deserializes JSON file"""
 import json
 import os.path
 from models.base_model import BaseModel
