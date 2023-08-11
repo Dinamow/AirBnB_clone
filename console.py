@@ -9,7 +9,6 @@ from models.user import User
 class HBNBCommand(cmd.Cmd):
     """the command line to mainuplate classe"""
     ModleNames = ["BaseModel", "User"]
-    y = {}
     prompt = "(hbnb) "
 
     def do_EOF(self, line):
