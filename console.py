@@ -9,7 +9,8 @@ from models.user import User
 class HBNBCommand(cmd.Cmd):
     """the command line to mainuplate classe"""
     ModleNames = ["BaseModel", "User"]
-    y = {}
+    classes = {"BaseModel": BaseModel, "User": User}
+    unchangable = ["id", "created_at", "updated_at"]
     prompt = "(hbnb) "
 
     def do_EOF(self, line):
@@ -22,21 +23,23 @@ class HBNBCommand(cmd.Cmd):
         test = False
         if len(line) == 0:
             print("** class name missing **")
-        elif splited[0] not in self.ModleNames:
+        elif splited[0] not in self.classes.keys():
             print("** class doesn't exist **")
-        elif splited[0] in self.ModleNames and len(splited) == 1:
+        elif splited[0] in self.classes.keys() and len(splited) == 1:
             print("** instance id missing **")
         else:
             my_storage = storage
             for key, value in my_storage.all().items():
                 tmp = key.split(".")
-                if splited[1] == tmp[1]:
+                if splited[1] == tmp[1] and splited[0] == tmp[0]:
                     test = True
                     if len(splited) == 2:
                         print("** attribute name missing **")
                         break
                     if len(splited) == 3:
                         print("** value missing **")
+                        break
+                    if splited[2] in self.unchangable:
                         break
                     splited[3] = eval(splited[3])
                     setattr(storage.all()[key], splited[2], splited[3])
@@ -53,15 +56,15 @@ class HBNBCommand(cmd.Cmd):
         splited = line.split(" ")
         if len(line) == 0:
             print("** class name missing **")
-        elif splited[0] not in self.ModleNames:
+        elif splited[0] not in self.classes.keys():
             print("** class doesn't exist **")
-        elif splited[0] in self.ModleNames and len(splited) == 1:
+        elif splited[0] in self.classes.keys() and len(splited) == 1:
             print("** instance id missing **")
         else:
             x = storage
             for key, value in x.all().items():
                 tmp = key.split(".")
-                if splited[1] == tmp[1]:
+                if splited[1] == tmp[1] and splited[0] == tmp[0]:
                     test = True
                     del x.all()[key]
                     x.save()
@@ -82,12 +85,15 @@ class HBNBCommand(cmd.Cmd):
         splited = line.split(" ")
         if len(line) == 0:
             print("** class name missing **")
-        elif line not in self.ModleNames or len(splited) > 1:
+        elif line not in self.classes.keys() or len(splited) > 1:
             print("** class doesn't exist **")
         else:
-            test = BaseModel()
-            test.save()
-            print(test.id)
+            for key in self.classes.keys():
+                if line == key:
+                    test = self.classes[key]()
+                    test.save()
+                    print(test.id)
+                    break
 
     def do_show(self, line):
         """
@@ -98,14 +104,14 @@ class HBNBCommand(cmd.Cmd):
         test = False
         if len(line) == 0:
             print("** class name missing **")
-        elif splited[0] not in self.ModleNames:
+        elif splited[0] not in self.classes.keys():
             print("** class doesn't exist **")
-        elif splited[0] in self.ModleNames and len(splited) == 1:
+        elif splited[0] in self.classes.keys() and len(splited) == 1:
             print("** instance id missing **")
         else:
             for key, value in storage.all().items():
                 tmp = key.split(".")
-                if splited[1] == tmp[1]:
+                if splited[1] == tmp[1] and splited[0] == tmp[0]:
                     test = True
                     print(value)
                     break
@@ -115,12 +121,18 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, line):
         splited = line.split(" ")
         arr = []
-        if len(splited) > 1 and splited[0] not in self.ModleNames:
+        if len(splited) > 1 and splited[0] not in self.classes.keys():
             print("** class doesn't exist **")
         else:
             teto = storage.all()
-            for i in teto.keys():
-                arr.append(str(teto[i]))
+            if len(line) == 0:
+                for key in teto.keys():
+                    arr.append(str(teto[key]))
+            else:
+                for key in teto.keys():
+                    tmp = key.split(".")
+                    if tmp[0] == splited[0]:
+                        arr.append(str(teto[key]))
             print(arr)
 
 
