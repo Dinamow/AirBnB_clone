@@ -38,3 +38,5 @@ class Test_BaseModel(unittest.TestCase):
         self.assertEqual(p1.id, "asa")
         self.assertNotEqual(x["id"], p1.name)
         self.assertNotEqual(x["created_at"], p1.created_at)
+        self.assertTrue(hasattr(p1.__dict__, "__class__"))
+        self.assertTrue(hasattr(p1.to_dict(), "__class__"))
