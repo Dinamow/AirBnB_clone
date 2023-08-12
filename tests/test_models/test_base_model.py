@@ -29,5 +29,12 @@ class Test_BaseModel(unittest.TestCase):
         """test base methods"""
         p1 = BaseModel()
         p1.save()
+        p1.name = "mezo"
+        x = p1.to_dict()
+        p1.id = "asa"
         self.assertNotEqual(p1.updated_at, p1.created_at)
-        self.assertNotEqual(p1.to_dict, p1.__dict__)
+        self.assertNotEqual(p1.to_dict(), p1.__dict__)
+        self.assertEqual(x["name"], p1.name)
+        self.assertEqual(p1.id, "asa")
+        self.assertNotEqual(x["id"], p1.name)
+        self.assertNotEqual(x["created_at"], p1.created_at)
