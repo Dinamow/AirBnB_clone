@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-from models.base_model import BaseModel
 """module file"""
+from models.base_model import BaseModel
 
 
 class Place(BaseModel):
