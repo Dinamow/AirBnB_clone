@@ -1,7 +1,11 @@
 footer {
 	background-color: #00ff00;
-	display: flex;
-	align-items: center;
-	grid-area: footer;
-	justify-content: center;
+	height: 60px;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
+div {
+	padding-top: 1.7%;
+	padding-left: 45%;
 }

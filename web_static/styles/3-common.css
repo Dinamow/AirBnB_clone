@@ -1,16 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	display: grid;
-	color: #484848;
 	font-size: 14px;
-	font-family: Circular, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	grid-template-columns: 1fr;
-	grid-template-rows: 70px 1fr 60px;
-	grid-template-areas:
-	   "header"
-	   "."
-	   "footer";
-	min-height: 100vh;
-	max-height: 100%;
+	font-family: sans-serif;
+	color: #484848;
 }
